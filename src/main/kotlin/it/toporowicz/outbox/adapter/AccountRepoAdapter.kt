@@ -20,17 +20,19 @@ class AccountRepoAdapter(
     @Transactional
     override fun save(account: Account, relatedEvents: List<AccountEvent>) {
         accountRepo.save(asEntity(account))
-        outboxMessageRepo.saveAll(relatedEvents.stream().map { asEntity(it) }.toList())
+        outboxMessageRepo.saveAll(
+                relatedEvents.stream()
+                        .map {
+                            OutboxMessage(
+                                    eventType = it.javaClass.canonicalName,
+                                    jsonContent = jsonMapper.toJson(it)
+                            )
+                        }
+                        .toList()
+        )
     }
 
     private fun asEntity(account: Account): it.toporowicz.outbox.infrastructure.db.Account {
         return it.toporowicz.outbox.infrastructure.db.Account(account.id, account.name, account.email)
-    }
-
-    private fun asEntity(event: AccountEvent): OutboxMessage {
-        return OutboxMessage(
-                eventType = event.javaClass.canonicalName,
-                jsonContent = jsonMapper.toJson(event)
-        )
     }
 }
