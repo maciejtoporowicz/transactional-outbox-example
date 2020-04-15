@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component
 
 @Component
 @Lazy(false)
-class OutboxMessageRelay(
+class OutboxMessagePollerTimer(
         private val outboxMessagePollerFactory: OutboxMessagePollerFactory,
         private val taskExecutor: TaskExecutor ) {
 
-    private val log = LoggerFactory.getLogger(OutboxMessageRelay::class.java)
+    private val log = LoggerFactory.getLogger(OutboxMessagePollerTimer::class.java)
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRateString = "\${outboxMessages.polling.interval}")
     fun tick() {
         log.info("Polling for outbox messages")
         taskExecutor.execute(outboxMessagePollerFactory.newOutgoingEventPoller())
