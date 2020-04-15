@@ -19,7 +19,7 @@ class OutboxMessagePoller(
             val transaction = entityManager.transaction
             transaction.begin()
 
-            val message = findMessage(entityManager)
+            val message = deleteFirstMessage(entityManager)
 
             if (message == null) {
                 transaction.rollback()
@@ -47,7 +47,7 @@ class OutboxMessagePoller(
         return jsonMapper.fromJson(event.jsonContent, Class.forName(event.eventType))
     }
 
-    private fun findMessage(entityManager: EntityManager): OutboxMessage? {
+    private fun deleteFirstMessage(entityManager: EntityManager): OutboxMessage? {
         val messages = entityManager
                 .createNativeQuery("""
                     DELETE FROM outbox_message 
