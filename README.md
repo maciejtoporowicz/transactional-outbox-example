@@ -1,6 +1,12 @@
 # Transactional Outbox Pattern
 Example implementation in Kotlin with Spring and PostgreSQL.
 
+# About
+This repository is created specifically for the purpose of my article about the transactional outbox pattern. 
+You can read it here:
+* https://toporowicz.it/transactional-outbox-pattern-monolith-app
+* https://dev.to/maciejtoporowicz/transactional-outbox-pattern-in-a-monolithic-application-1ooc
+
 # Requirements
 * PostgreSQL >= 9.5
 * schema from `schema.sql` present in the database
