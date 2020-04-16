@@ -27,8 +27,8 @@ class OutboxMessagePoller(
             }
 
             try {
-                val deserializedContent = deserializeContentFrom(message)
-                applicationEventPublisher.publishEvent(deserializedContent)
+                val messageContent = extractMessageContentFrom(message)
+                applicationEventPublisher.publishEvent(messageContent)
                 transaction.commit()
             } catch (e: Throwable) {
                 try {
@@ -43,7 +43,7 @@ class OutboxMessagePoller(
         }
     }
 
-    private fun deserializeContentFrom(event: OutboxMessage): Any {
+    private fun extractMessageContentFrom(event: OutboxMessage): Any {
         return jsonMapper.fromJson(event.jsonContent, Class.forName(event.eventType))
     }
 
